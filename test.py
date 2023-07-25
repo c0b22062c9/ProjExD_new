@@ -2,26 +2,9 @@ import pygame as pg
 import random
 import sys
 
-# ゲームウィンドウの幅
+# ゲームウィンドウの幅と高さ
 WIDTH = 800
-# ゲームウィンドウの高さ
 HEIGHT = 600
-
-class GameOver:
-    """
-    GameOver処理を行うクラス
-    """
-    def __init__(self):
-        self.font = pg.font.Font(None, 72)
-        self.color = (0, 0, 0)
-        self.message = "GameOver"
-        self.image = self.font.render(self.message, True, self.color)
-        self.rect = self.image.get_rect()
-        self.rect.center = WIDTH // 2, HEIGHT // 2
-    
-    def show(self, screen: pg.surface):
-        self.image = self.font.render(self.message, True, self.color)
-        screen.blit(self.image, self.rect)
 
 class Time:
     """
@@ -47,8 +30,6 @@ def main():
     clock = pg.time.Clock()
     frame_count = 0  #フレーム数をカウントする為の変数
     time = Time()
-
-    game_over = GameOver()
 
     # 色の設定
     WHITE = (255, 255, 255)
@@ -136,9 +117,6 @@ def main():
 
         #Timeが0になったらゲーム終了
         if time.tmr == 0:
-            game_over.show(screen)
-            pg.display.flip()
-            pg.time.delay(3000)
             return False
         
         # player移動 壁を通り過ぎないように
@@ -191,10 +169,6 @@ def main():
             # 衝突検出
             if player_rect.colliderect(bomb):
                 bombs.remove(bomb)
-                game_over.show(screen)
-                pg.display.flip()
-                pg.time.delay(3000)  # "ゲームオーバー"のメッセージを3秒間表示します
-                sys.exit()
                 pg.quit()
 
             # 爆弾を再生する
@@ -236,7 +210,6 @@ def main():
             for bomb in bombs[:]:
                 if wall.colliderect(bomb):
                     bombs.remove(bomb)
-            
 
         # スコアの表示
         font = pg.font.Font(None, 36)
@@ -269,7 +242,7 @@ def main():
         #timeを200フレームごとに-1する。
         if frame_count % 200 == 0:
             time.time_subtract() 
-        clock.tick(200)
+        clock.tick(8000)
 
         pg.display.flip()
 
